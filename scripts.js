@@ -7,6 +7,8 @@
 
       const rect = item.getBoundingClientRect()
 
+      console.log(rect)
+
       const afterElement = window.getComputedStyle(item, ':after')
       const beforeElement = window.getComputedStyle(item, ':before')
       const offset = 2
