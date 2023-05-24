@@ -5,8 +5,9 @@
 }
 
 .content {
-	width: 80vw;
+	width: 80%;
 	height: 195vh;
+
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -15,8 +16,25 @@
 }
 
 
-.item {
+/*ul{
+	display: grid;
+	list-style: none;
+	grid-auto-flow: column;
+	grid-auto-columns: 30px;
+	gap: 20px;
+}*/
 
+ul {
+	list-style: none;
+	width: 80%;
+	margin-inline: auto;
+}
+
+li {
+	display: inline-block;
+}
+
+.item {
 
 	--item-width: 30px;
 	--tooltip-angle: 10px;
@@ -63,7 +81,7 @@
 
 
 .tooltip-move-to-top::before {
-	transform: translate( calc(-50% + var(--dynamic-position)), calc(-100% - var(--tooltip-angle)));
+	transform: translate(calc(-50% + var(--dynamic-position)), calc(-100% - var(--tooltip-angle)));
 	left: 50%;
 	top: 0;
 }
