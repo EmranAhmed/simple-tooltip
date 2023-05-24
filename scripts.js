@@ -4,7 +4,9 @@
   items.forEach((item) => {
 
     item.addEventListener('mouseenter', (event) => {
+
       const rect = item.getBoundingClientRect()
+
       const afterElement = window.getComputedStyle(item, ':after')
       const beforeElement = window.getComputedStyle(item, ':before')
       const offset = 2
@@ -21,10 +23,10 @@
       const topPosition = beforeHeight + afterTopWidth + offset
 
       item.classList.toggle('tooltip-move-to-bottom',
-        rect.y < topPosition)
+        rect.top < topPosition)
 
       item.classList.toggle('tooltip-move-to-top',
-        rect.y > topPosition)
+        rect.top > topPosition)
 
       const width = (beforeWidth / 2)
       const position = rect.left + (rect.width / 2)
@@ -51,4 +53,3 @@
   })
 
 }(window))
-
