@@ -43,10 +43,7 @@ li {
 .item {
 
 	--item-width: 30px;
-	--tooltip-angle: 10px;
-	--tooltip-color: #d780d7;
-	--tooltip-width: 300px;
-	--dynamic-position: 0px;
+
 
 	width: var(--item-width);
 	aspect-ratio: 1;
@@ -57,58 +54,99 @@ li {
 	border-radius: 50%;
 }
 
+.item:focus-visible{
+	border: 1px solid black;
+}
 
-.item::after,
-.item::before {
+[data-storepress-tooltip]{
+	--tooltip-angle: 10px;
+	--tooltip-color: #d780d7;
+	--tooltip-width: 300px;
+	--tooltip-height: 150px;
+	--tooltip-offset: 10px;
+	--tooltip-edge: 2px;
+	--_tooltip-position: 0px;
+}
+
+[data-storepress-tooltip]::before,
+[data-storepress-tooltip]::after {
 	position: absolute;
 	display: none;
+	z-index: 999;
+	opacity: 0;
+	transition-property: opacity, display;
+	transition-duration: 500ms;
+	transition-behavior: allow-discrete;
 }
 
-.item::after {
-	border: var(--tooltip-angle) solid transparent;
-	content: "";
+/*.storepress-tooltip-visible[data-storepress-tooltip]::before,
+.storepress-tooltip-visible[data-storepress-tooltip]::after {
+	display: grid;
+	opacity: 1;
+}*/
+
+[data-storepress-tooltip]:hover::before,
+[data-storepress-tooltip]:hover::after,
+[data-storepress-tooltip]:focus-visible::before,
+[data-storepress-tooltip]:focus-visible::after {
+	display: grid;
+	opacity: 1;
 }
 
-.item::before {
-	content: attr(data-label);
+/* Include after the .storepress-tooltip-visible[data-storepress-tooltip] rule */
+@starting-style {
+	/*.storepress-tooltip-visible[data-storepress-tooltip]::before,
+	.storepress-tooltip-visible[data-storepress-tooltip]::after {
+		display: grid;
+		opacity: 0;
+	}*/
+
+	[data-storepress-tooltip]:hover::before,
+	[data-storepress-tooltip]:hover::after,
+	[data-storepress-tooltip]:focus-visible::before,
+	[data-storepress-tooltip]:focus-visible::after {
+		display: grid;
+		opacity: 0;
+	}
+}
+
+[data-storepress-tooltip]::before {
+	content: attr(data-storepress-tooltip);
 	width: var(--tooltip-width);
-	aspect-ratio: 2 / 1;
+	height: var(--tooltip-height);
 	background-color: var(--tooltip-color);
 	color: #fff;
 	border-radius: 5px;
 	align-content: center;
 }
 
-
-.item:hover:after,
-.item:hover:before {
-	display: grid;
+[data-storepress-tooltip]::after {
+	border: var(--tooltip-angle) solid transparent;
+	content: "";
 }
 
-
-.tooltip-move-to-top::before {
-	transform: translate(calc(-50% + var(--dynamic-position)), calc(-100% - var(--tooltip-angle)));
+.storepress-tooltip-position-top[data-storepress-tooltip]::before {
+	transform: translate(calc(-50% + var(--_tooltip-position)), calc(-100% - var(--tooltip-angle) - var(--tooltip-offset)));
 	left: 50%;
 	top: 0;
 }
 
-.tooltip-move-to-top::after {
+.storepress-tooltip-position-top[data-storepress-tooltip]::after {
 	border-top-color: var(--tooltip-color);
-	transform: translate(-50%, calc(var(--tooltip-angle) * -1));
+	transform: translate(-50%, calc(var(--tooltip-angle) * -1 - var(--tooltip-offset)));
 	left: 50%;
 	top: 0;
 }
 
-
-.tooltip-move-to-bottom::before {
-	transform: translate(calc(-50% + var(--dynamic-position)), calc(100% + var(--tooltip-angle)));
+.storepress-tooltip-position-bottom[data-storepress-tooltip]::before {
+	transform: translate(calc(-50% + var(--_tooltip-position)), calc(100% + var(--tooltip-angle) + var(--tooltip-offset)));
 	left: 50%;
 	bottom: 0;
 }
 
-.tooltip-move-to-bottom::after {
+.storepress-tooltip-position-bottom[data-storepress-tooltip]::after {
 	border-bottom-color: var(--tooltip-color);
-	transform: translate(-50%, calc(var(--tooltip-angle) * 1));
+	transform: translate(-50%, calc(var(--tooltip-angle) * 1 + var(--tooltip-offset)));
 	left: 50%;
 	bottom: 0;
 }
