@@ -6,6 +6,7 @@
     const element = event.target
 
     element.style.removeProperty('--_tooltip-position')
+    element.classList.remove('storepress-tooltip-position-top', 'storepress-tooltip-position-bottom')
 
     const rect = element.getBoundingClientRect()
     const style = window.getComputedStyle(element)
