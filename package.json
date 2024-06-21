@@ -1,6 +1,6 @@
 {
   "name": "@storepress/tooltip",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A StorePress ToolTip",
   "author": "EmranAhmed",
   "license": "GPL-2.0-or-later",
@@ -69,6 +69,9 @@
 	"publishConfig" : {
 		"access" : "public"
 	},
+	"sideEffects" : [
+		"src/**"
+	],
 	"scripts": {
 		"build": "rm -rf ./build && wp-scripts build --webpack-copy-php --experimental-modules",
 		"format": "wp-scripts format ./src",
