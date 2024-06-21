@@ -1,6 +1,6 @@
 {
   "name": "@storepress/tooltip",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A StorePress ToolTip",
   "author": "EmranAhmed",
   "license": "GPL-2.0-or-later",
@@ -32,20 +32,8 @@
     ]
   },
   "files": [
-    "vendor/**",
-    "admin/**",
     "build/**",
-    "assets/**",
-    "images/**",
-    "includes/**",
-    "templates/**",
-    "languages/**",
-    "public/**",
-    "*.html",
-    "block.json",
-    "changelog.*",
-    "README.txt",
-    "wpml-config.xml"
+    "src/**"
   ],
 	"main": "build/tooltip.js",
 	"module" : "src/tooltip.js",
