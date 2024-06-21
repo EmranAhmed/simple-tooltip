@@ -7,7 +7,8 @@
 	--tooltip-padding: 10px;
 	--tooltip-offset: 5px;
 	--tooltip-edge: 2px;
-	--_tooltip-position: 0;
+	// stylelint-disable-next-line length-zero-no-unit
+	--_tooltip-position: 0px;
 }
 
 @mixin storepress-tooltip-base-style() {
@@ -102,7 +103,6 @@
 
 	[dir="rtl"] {
 		#{$selector} {
-
 			--_arrow-x: 50%;
 			--_content-x: calc(50% + var(--_tooltip-position));
 
@@ -137,26 +137,33 @@
 			}
 		}
 
-		&.storepress-tooltip-position-top::before,
+
 		&::before {
 			@include storepress-tooltip-content-style($content-attribute);
 			@include storepress-tooltip-content-position-top();
 		}
 
-		&.storepress-tooltip-position-top::after,
 		&::after {
 			@include storepress-tooltip-arrow-style();
 			@include storepress-tooltip-arrow-position-top();
 		}
-
-		&.storepress-tooltip-position-bottom::before {
-			@include storepress-tooltip-content-style($content-attribute);
-			@include storepress-tooltip-content-position-bottom();
-		}
-
-		&.storepress-tooltip-position-bottom::after {
-			@include storepress-tooltip-arrow-style();
-			@include storepress-tooltip-arrow-position-bottom();
-		}
 	}
+
+	.storepress-tooltip-position-top#{$selector}::before {
+		@include storepress-tooltip-content-position-top();
+	}
+
+	.storepress-tooltip-position-top#{$selector}::after {
+		@include storepress-tooltip-arrow-position-top();
+	}
+
+	.storepress-tooltip-position-bottom#{$selector}::before {
+		@include storepress-tooltip-content-position-bottom();
+	}
+
+	.storepress-tooltip-position-bottom#{$selector}::after {
+		@include storepress-tooltip-arrow-position-bottom();
+	}
+
+
 }
