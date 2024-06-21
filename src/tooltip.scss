@@ -1,0 +1,5 @@
+@charset "UTF-8";
+
+@import "./mixins";
+
+@include storepress-tooltip-init("[data-storepress-tooltip]", "data-storepress-tooltip")
