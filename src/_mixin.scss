@@ -1,0 +1,165 @@
+@mixin storepress-tooltip-variables() {
+	--tooltip-angle: 5px;
+	--tooltip-text-color: #fff;
+	--tooltip-background-color: #333;
+	--tooltip-max-width: 150px;
+	--tooltip-height: 35px;
+	--tooltip-padding: 10px;
+	--tooltip-offset: 5px;
+	--tooltip-edge: 2px;
+	// stylelint-disable-next-line length-zero-no-unit
+	--_tooltip-position: 0px;
+}
+
+@mixin storepress-tooltip-base-style() {
+	position: absolute;
+	box-sizing: border-box;
+	display: none;
+	opacity: 0;
+	z-index: 999;
+	transition-property: opacity, display;
+	transition-duration: 500ms;
+	// stylelint-disable-next-line property-no-unknown
+	transition-behavior: allow-discrete;
+	@media (prefers-reduced-motion: reduce) {
+		transition-property: none;
+		transition-duration: 0s;
+		// stylelint-disable-next-line property-no-unknown
+		transition-behavior: unset;
+	}
+}
+
+@mixin storepress-tooltip-hover-style() {
+	display: block;
+	opacity: 1;
+}
+
+@mixin storepress-tooltip-starting-style() {
+	display: block;
+	opacity: 0;
+}
+
+@mixin storepress-tooltip-content-style($content-attribute) {
+	content: attr(#{$content-attribute});
+	width: max-content;
+	max-width: var(--tooltip-max-width);
+	min-height: var(--tooltip-height);
+	background-color: var(--tooltip-background-color);
+	color: var(--tooltip-text-color);
+	border-radius: 3px;
+	padding: var(--tooltip-padding);
+	font-size: 0.8rem;
+	text-align: center;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+@mixin storepress-tooltip-arrow-style() {
+	border: var(--tooltip-angle) solid transparent;
+	content: "";
+}
+
+@mixin storepress-tooltip-content-position-top() {
+	--x: var(--_content-x);
+	--y: calc((100% + var(--tooltip-angle) + var(--tooltip-offset)) * -1);
+	translate: var(--x) var(--y);
+
+	left: 50%;
+	top: 0;
+}
+
+@mixin storepress-tooltip-content-position-bottom() {
+	--x: var(--_content-x);
+	--y: calc(100% + var(--tooltip-angle) + var(--tooltip-offset));
+	translate: var(--x) var(--y);
+
+	left: 50%;
+	bottom: 0;
+	top: auto;
+}
+
+@mixin storepress-tooltip-arrow-position-top() {
+	--x: var(--_arrow-x);
+	--y: calc((var(--tooltip-angle) + var(--tooltip-offset)) * -1);
+	translate: var(--x) var(--y);
+
+	border-top-color: var(--tooltip-background-color);
+	left: 50%;
+	top: 0;
+}
+
+@mixin storepress-tooltip-arrow-position-bottom() {
+	--x: var(--_arrow-x);
+	--y: calc(var(--tooltip-angle) + var(--tooltip-offset));
+	translate: var(--x) var(--y);
+
+	border-top-color: transparent;
+	border-bottom-color: var(--tooltip-background-color);
+	left: 50%;
+	bottom: 0;
+	top: auto;
+}
+
+@mixin storepress-tooltip-init($content-attribute: "data-storepress-tooltip") {
+
+	[dir="rtl"] & {
+		--_arrow-x: 50%;
+		--_content-x: calc(50% + var(--_tooltip-position));
+	}
+	& {
+
+		--_arrow-x: -50%;
+		--_content-x: calc(-50% + var(--_tooltip-position));
+
+		position: relative;
+
+		@include storepress-tooltip-variables();
+
+		&::before,
+		&::after {
+			@include storepress-tooltip-base-style();
+		}
+
+		&:hover::before,
+		&:hover::after,
+		&:focus-visible::before,
+		&:focus-visible::after {
+			@include storepress-tooltip-hover-style();
+		}
+
+		// stylelint-disable-next-line scss/at-rule-no-unknown
+		@starting-style {
+			&:hover::before,
+			&:hover::after,
+			&:focus-visible::before,
+			&:focus-visible::after {
+				@include storepress-tooltip-starting-style();
+			}
+		}
+
+		&::before {
+			@include storepress-tooltip-content-style($content-attribute);
+			@include storepress-tooltip-content-position-top();
+		}
+
+		&::after {
+			@include storepress-tooltip-arrow-style();
+			@include storepress-tooltip-arrow-position-top();
+		}
+	}
+
+	&.storepress-tooltip-position-top::before {
+		@include storepress-tooltip-content-position-top();
+	}
+
+	&.storepress-tooltip-position-top::after {
+		@include storepress-tooltip-arrow-position-top();
+	}
+
+	&.storepress-tooltip-position-bottom::before {
+		@include storepress-tooltip-content-position-bottom();
+	}
+
+	&.storepress-tooltip-position-bottom::after {
+		@include storepress-tooltip-arrow-position-bottom();
+	}
+}
