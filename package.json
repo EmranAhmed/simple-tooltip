@@ -92,6 +92,6 @@
 		"create-woo-extension": "npx @wordpress/create-block@latest --template @woocommerce/create-woo-extension --namespace storepress",
 		"create-product-editor-block": "npx @wordpress/create-block@latest --template @woocommerce/create-product-editor-block --namespace storepress",
 		"prepare": "husky install && npx husky add .husky/pre-commit \"npm run pre-commit\"",
-		"pre-commit": ""
+		"pre-commit": "lint-staged"
 	}
 }
