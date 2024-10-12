@@ -9,20 +9,20 @@ Tooltip based on css. Only control position based on JS.
 
 - `npm install`
 - `npm run build`
-- Load `./build/tooltip.css`
-- Load `./build/tooltip.js`
+- Load `./build/style-index.css`
+- Load `./build/index.js`
 - Add `data-storepress-tooltip="Tooltip Text"` attribute on any html element.
 
 ## Development
 
 - `npm start`
-- Please check `./src/tooltip.scss`
-- Please check `./src/tooltip.js`
+- Please check `./src/style.scss`
+- Please check `./src/index.js`
 
 ## Package Usages
 
 ```shell
-npm i @storepress/tooltip --save
+npm i @storepress/tooltip @storepress/utils --save
 ```
 
 Lets create `data-tooltip`.
