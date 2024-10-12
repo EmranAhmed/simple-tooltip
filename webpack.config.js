@@ -16,7 +16,7 @@ const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const scriptConfig = {
 	...defaultJSConfig,
 	entry: {
-		tooltip: getFile('tooltip.js'),
+		index: getFile('index.js'),
 	},
 
 	resolve: {
