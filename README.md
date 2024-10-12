@@ -5,7 +5,7 @@ Tooltip based on css. Only control position based on JS.
 - Support `prefers-reduced-motion` for accessibility.
 - Support RTL.
 
-## Usages
+## Local Usages
 
 - `npm install`
 - `npm run build`
@@ -19,9 +19,17 @@ Tooltip based on css. Only control position based on JS.
 - Please check `./src/tooltip.scss`
 - Please check `./src/tooltip.js`
 
-## Custom namespace
+## Package Usages
 
-Lets create `data-example-tooltip`.
+```shell
+npm i @storepress/tooltip --save
+```
+
+Lets create `data-tooltip`.
+
+```html
+<span class="tooltip" data-tooltip="Tooltip Contents"></span>
+```
 
 Create `custom-tooltip.scss` file
 
@@ -30,9 +38,11 @@ Create `custom-tooltip.scss` file
 
 @import "~@storepress/tooltip/src/mixins";
 
-// 1st arg: $selector is for selector,
-// 2nd arg: $content-attribute is for tooltip text attribute.
-@include storepress-tooltip-init("[data-example-tooltip]", 'data-example-tooltip')
+[data-storepress-tooltip] {
+
+  // $content-attribute is for tooltip text attribute.
+  @include storepress-tooltip-init("data-tooltip")
+}
 ```
 
 Create `custom-tooltip.js` file
@@ -41,18 +51,22 @@ Create `custom-tooltip.js` file
 /**
  * External dependencies
  */
+import { StorePressTooltip } from '@storepress/tooltip'
 import { triggerEvent } from '@storepress/utils'
 
-triggerEvent(document, 'storepress_tooltip_init_with', {
-  element: '[data-example-tooltip]',
-})
+document.addEventListener('DOMContentLoaded', () => {
+  StorePressTooltip();
+  triggerEvent(document, 'storepress_tooltip_init_with', {
+    element: 'span.tooltip',
+  })
+});
 
 // OR
 
 document.addEventListener('DOMContentLoaded', () => {
   document.dispatchEvent(new CustomEvent('storepress_tooltip_init_with', {
     detail: {
-      element: '[data-example-tooltip]',
+      element: 'span.tooltip',
     },
   }))
 })

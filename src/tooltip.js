@@ -9,7 +9,7 @@ import { createPluginInstance, triggerEvent } from '@storepress/utils';
 import './tooltip.scss';
 import { Plugin } from './Plugin';
 
-function LoadStorePressTooltip() {
+function StorePressTooltip() {
 	const Tooltip = {
 		getInstance(element) {
 			return createPluginInstance(element, false, Plugin);
@@ -61,10 +61,11 @@ function LoadStorePressTooltip() {
 		const selector = event.detail?.element;
 		Tooltip.destroyWith(selector);
 	});
-
-	triggerEvent(document, 'storepress_tooltip_init');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-	LoadStorePressTooltip();
+	StorePressTooltip();
+	triggerEvent(document, 'storepress_tooltip_init');
 });
+
+export default StorePressTooltip;

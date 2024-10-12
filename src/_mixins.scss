@@ -99,19 +99,18 @@
 	top: auto;
 }
 
-@mixin storepress-tooltip-init($selector: "[data-storepress-tooltip]", $content-attribute: "data-storepress-tooltip") {
+@mixin storepress-tooltip-init($content-attribute: "data-storepress-tooltip") {
 
-	[dir="rtl"] {
-		#{$selector} {
-			--_arrow-x: 50%;
-			--_content-x: calc(50% + var(--_tooltip-position));
-
-		}
+	[dir="rtl"] & {
+		--_arrow-x: 50%;
+		--_content-x: calc(50% + var(--_tooltip-position));
 	}
-	#{$selector} {
+	& {
 
 		--_arrow-x: -50%;
 		--_content-x: calc(-50% + var(--_tooltip-position));
+
+		position: relative;
 
 		@include storepress-tooltip-variables();
 
@@ -137,7 +136,6 @@
 			}
 		}
 
-
 		&::before {
 			@include storepress-tooltip-content-style($content-attribute);
 			@include storepress-tooltip-content-position-top();
@@ -149,21 +147,19 @@
 		}
 	}
 
-	.storepress-tooltip-position-top#{$selector}::before {
+	&.storepress-tooltip-position-top::before {
 		@include storepress-tooltip-content-position-top();
 	}
 
-	.storepress-tooltip-position-top#{$selector}::after {
+	&.storepress-tooltip-position-top::after {
 		@include storepress-tooltip-arrow-position-top();
 	}
 
-	.storepress-tooltip-position-bottom#{$selector}::before {
+	&.storepress-tooltip-position-bottom::before {
 		@include storepress-tooltip-content-position-bottom();
 	}
 
-	.storepress-tooltip-position-bottom#{$selector}::after {
+	&.storepress-tooltip-position-bottom::after {
 		@include storepress-tooltip-arrow-position-bottom();
 	}
-
-
 }
