@@ -1,9 +1,10 @@
 @mixin storepress-tooltip-variables() {
 	--tooltip-angle: 5px;
+	--tooltip-font-size: 0.8rem;
 	--tooltip-text-color: #fff;
 	--tooltip-background-color: #333;
 	--tooltip-max-width: 150px;
-	--tooltip-height: 35px;
+	--tooltip-min-height: 35px;
 	--tooltip-padding: 10px;
 	--tooltip-offset: 5px;
 	--tooltip-edge: 2px;
@@ -43,12 +44,12 @@
 	content: attr(#{$content-attribute});
 	width: max-content;
 	max-width: var(--tooltip-max-width);
-	min-height: var(--tooltip-height);
+	min-height: var(--tooltip-min-height);
 	background-color: var(--tooltip-background-color);
 	color: var(--tooltip-text-color);
 	border-radius: 3px;
 	padding: var(--tooltip-padding);
-	font-size: 0.8rem;
+	font-size: var(--tooltip-font-size);
 	text-align: center;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
@@ -106,7 +107,6 @@
 		--_content-x: calc(50% + var(--_tooltip-position));
 	}
 	& {
-
 		--_arrow-x: -50%;
 		--_content-x: calc(-50% + var(--_tooltip-position));
 

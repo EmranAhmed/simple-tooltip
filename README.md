@@ -9,8 +9,8 @@ Tooltip based on css. Only control position based on JS.
 
 - `npm install`
 - `npm run build`
-- Load `./build/style-index.css`
-- Load `./build/index.js`
+- Load `./build/style-tooltip.css`
+- Load `./build/tooltip.js`
 - Add `data-storepress-tooltip="Tooltip Text"` attribute on any html element.
 
 ## Development
@@ -51,7 +51,7 @@ Create `custom-tooltip.js` file
 /**
  * External dependencies
  */
-import { StorePressTooltip } from '@storepress/tooltip'
+import StorePressTooltip from '@storepress/tooltip'
 import { triggerEvent } from '@storepress/utils'
 
 document.addEventListener('DOMContentLoaded', () => {

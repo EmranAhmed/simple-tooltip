@@ -6,7 +6,6 @@ import { createPluginInstance, triggerEvent } from '@storepress/utils';
 /**
  * Internal dependencies
  */
-import './style.scss';
 import { Plugin } from './Plugin';
 
 function StorePressTooltip() {
