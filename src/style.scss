@@ -1,10 +1,7 @@
 @charset "UTF-8";
 
-@import "./mixins";
+@use "./mixins" as plugin;
 
-$default-font: -apple-system, BlinkMacSystemFont,"Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell,"Helvetica Neue", sans-serif;
-
-[data-storepress-tooltip] {
-	font-family: $default-font;
-	@include storepress-tooltip-init("data-storepress-tooltip");
+:where([data-storepress-tooltip]) {
+	@include plugin.init("data-storepress-tooltip");
 }

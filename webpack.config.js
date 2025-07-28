@@ -1,17 +1,17 @@
 const [
 	defaultJSConfig,
 	defaultModuleConfig,
-] = require('@wordpress/scripts/config/webpack.config');
+] = require('@wordpress/scripts/config/webpack.config')
 const {
 	requestToExternal,
 	requestToHandle,
 	requestToExternalModule,
 	getFile,
 	getWebPackAlias,
-} = require('./bin/webpack-helpers');
-const WoocommerceDependencyExtractionWebpackPlugin = require('@woocommerce/dependency-extraction-webpack-plugin');
-const DependencyExtractionWebpackPlugin = require('@wordpress/dependency-extraction-webpack-plugin');
-const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
+} = require('./tools/webpack-helpers')
+const WoocommerceDependencyExtractionWebpackPlugin = require('@woocommerce/dependency-extraction-webpack-plugin')
+const DependencyExtractionWebpackPlugin = require('@wordpress/dependency-extraction-webpack-plugin')
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts')
 
 const scriptConfig = {
 	...defaultJSConfig,
@@ -21,6 +21,13 @@ const scriptConfig = {
 			getFile('style.scss'),
 			getFile('index.js'),
 		],
+		[`storepress-utils`]: {
+			import: '@storepress/utils/build-module/index.js',
+			library: {
+				name: ['StorePress', 'Utils'],
+				type: 'window',
+			},
+		},
 	},
 
 	resolve: {
@@ -35,7 +42,7 @@ const scriptConfig = {
 		// ...defaultJSConfig.plugins,
 		...defaultJSConfig.plugins.filter(
 			(plugin) =>
-				plugin.constructor.name !== 'DependencyExtractionWebpackPlugin'
+				plugin.constructor.name !== 'DependencyExtractionWebpackPlugin',
 		),
 		new WoocommerceDependencyExtractionWebpackPlugin({
 			requestToExternal,
@@ -49,15 +56,7 @@ const scriptConfig = {
 			stage: RemoveEmptyScriptsPlugin.STAGE_AFTER_PROCESS_PLUGINS,
 		}),
 	],
-	/*optimization: {
-		splitChunks: {
-			chunks: 'all',
-			minSize: 1,
-			name: 'common',
-		},
-		// runtimeChunk: { name: 'utils' },
-	},*/
-};
+}
 
 const moduleConfig = {
 	...defaultModuleConfig,
@@ -80,7 +79,7 @@ const moduleConfig = {
 		// ...defaultModuleConfig.plugins,
 		...defaultModuleConfig.plugins.filter(
 			(plugin) =>
-				plugin.constructor.name !== 'DependencyExtractionWebpackPlugin'
+				plugin.constructor.name !== 'DependencyExtractionWebpackPlugin',
 		),
 		new DependencyExtractionWebpackPlugin({
 			requestToExternal,
@@ -94,6 +93,6 @@ const moduleConfig = {
 			stage: RemoveEmptyScriptsPlugin.STAGE_AFTER_PROCESS_PLUGINS,
 		}),
 	],
-};
+}
 
-module.exports = [scriptConfig, moduleConfig];
+module.exports = [scriptConfig, moduleConfig]

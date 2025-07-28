@@ -1,70 +1,112 @@
 /**
  * External dependencies
  */
-import { createPluginInstance, triggerEvent } from '@storepress/utils';
+import {
+	createPluginInstance,
+	triggerEvent,
+	getPluginInstance,
+} from '@storepress/utils'
 
 /**
  * Internal dependencies
  */
-import { Plugin } from './Plugin';
+import { Plugin } from './Plugin'
 
-function StorePressTooltip() {
+function StorePressTooltip () {
+
 	const Tooltip = {
-		getInstance(element) {
-			return createPluginInstance(element, false, Plugin);
+		getInstance (element, options) {
+			return createPluginInstance(element, options, Plugin)
 		},
 
-		initWith($selector = '[data-storepress-tooltip]') {
-			for (const { element, unregister } of this.getInstance($selector)) {
-				element.addEventListener('destroy', unregister);
+		getPluginInstance (element) {
+			return getPluginInstance(element)
+		},
+
+		initWith ($selector, options) {
+			const instance = this.getInstance($selector, options)
+
+			for (const { element, reset } of instance) {
+				element.addEventListener('destroy', reset)
+			}
+
+			return instance
+		},
+
+		destroyWith ($selector) {
+			const instance = this.getPluginInstance($selector)
+			for (const { destroy } of instance) {
+				destroy()
 			}
 		},
 
-		init() {
-			for (const { element, unregister } of this.getInstance(
-				'[data-storepress-tooltip]'
-			)) {
-				element.addEventListener('destroy', unregister);
+		reInitWith ($selector, options) {
+			this.destroyWith($selector)
+			this.initWith($selector, options)
+		},
+	}
+
+	// Init.
+	document.addEventListener(
+		'storepress_tooltip_init',
+		(event) => {
+			const defaultSettings = {}
+			const settings = { ...defaultSettings, ...event.detail?.settings }
+			const element = event.detail?.element
+
+			if (Array.isArray(element)) {
+				for (const el of element) {
+					Tooltip.initWith(el, settings)
+				}
+			} else {
+				Tooltip.initWith(element, settings)
 			}
 		},
+		{ passive: true },
+	)
 
-		destroy() {
-			for (const { destroy } of this.getInstance(
-				'[data-storepress-tooltip]'
-			)) {
-				destroy();
+	// Destroy.
+	document.addEventListener(
+		'storepress_tooltip_destroy',
+		(event) => {
+			const element = event.detail?.element
+
+			if (Array.isArray(element)) {
+				for (const el of element) {
+					Tooltip.destroyWith(el)
+				}
+			} else {
+				Tooltip.destroyWith(element)
 			}
 		},
+		{ passive: true },
+	)
 
-		destroyWith($selector = '[data-storepress-tooltip]') {
-			for (const { destroy } of this.getInstance($selector)) {
-				destroy();
+	// Reload.
+	document.addEventListener(
+		'storepress_tooltip_reload',
+		(event) => {
+			const defaultSettings = {}
+			const settings = { ...defaultSettings, ...event.detail?.settings }
+			const element = event.detail?.element
+
+			if (Array.isArray(element)) {
+				for (const el of element) {
+					Tooltip.reInitWith(el, settings)
+				}
+			} else {
+				Tooltip.reInitWith(element, settings)
 			}
 		},
-	};
-
-	document.addEventListener('storepress_tooltip_init', () => {
-		Tooltip.init();
-	});
-
-	document.addEventListener('storepress_tooltip_destroy', () => {
-		Tooltip.destroy();
-	});
-
-	document.addEventListener('storepress_tooltip_init_with', (event) => {
-		const selector = event.detail?.element;
-		Tooltip.initWith(selector);
-	});
-
-	document.addEventListener('storepress_tooltip_destroy_with', (event) => {
-		const selector = event.detail?.element;
-		Tooltip.destroyWith(selector);
-	});
+		{ passive: true },
+	)
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-	StorePressTooltip();
-	triggerEvent(document, 'storepress_tooltip_init');
-});
+	StorePressTooltip()
+	triggerEvent(document, 'storepress_tooltip_init', {
+		element: ['[data-storepress-tooltip]'],
+	})
+})
 
-export default StorePressTooltip;
+export default StorePressTooltip

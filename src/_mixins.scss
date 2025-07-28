@@ -1,4 +1,7 @@
-@mixin storepress-tooltip-variables() {
+// @use "./mixins" as plugin;
+// :where([data-storepress-tooltip]){ @include plugin.init("data-storepress-tooltip"); }
+
+@mixin variables() {
 	--tooltip-angle: 5px;
 	--tooltip-font-size: 0.8rem;
 	--tooltip-text-color: #fff;
@@ -8,11 +11,10 @@
 	--tooltip-padding: 10px;
 	--tooltip-offset: 5px;
 	--tooltip-edge: 2px;
-	// stylelint-disable-next-line length-zero-no-unit
 	--_tooltip-position: 0px;
 }
 
-@mixin storepress-tooltip-base-style() {
+@mixin base-style() {
 	position: absolute;
 	box-sizing: border-box;
 	display: none;
@@ -30,17 +32,17 @@
 	}
 }
 
-@mixin storepress-tooltip-hover-style() {
+@mixin hover-style() {
 	display: block;
 	opacity: 1;
 }
 
-@mixin storepress-tooltip-starting-style() {
+@mixin starting-style() {
 	display: block;
 	opacity: 0;
 }
 
-@mixin storepress-tooltip-content-style($content-attribute) {
+@mixin content-style($content-attribute) {
 	content: attr(#{$content-attribute});
 	width: max-content;
 	max-width: var(--tooltip-max-width);
@@ -54,12 +56,12 @@
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-@mixin storepress-tooltip-arrow-style() {
+@mixin arrow-style() {
 	border: var(--tooltip-angle) solid transparent;
 	content: "";
 }
 
-@mixin storepress-tooltip-content-position-top() {
+@mixin content-position-top() {
 	--x: var(--_content-x);
 	--y: calc((100% + var(--tooltip-angle) + var(--tooltip-offset)) * -1);
 	translate: var(--x) var(--y);
@@ -68,7 +70,7 @@
 	top: 0;
 }
 
-@mixin storepress-tooltip-content-position-bottom() {
+@mixin content-position-bottom() {
 	--x: var(--_content-x);
 	--y: calc(100% + var(--tooltip-angle) + var(--tooltip-offset));
 	translate: var(--x) var(--y);
@@ -78,7 +80,7 @@
 	top: auto;
 }
 
-@mixin storepress-tooltip-arrow-position-top() {
+@mixin arrow-position-top() {
 	--x: var(--_arrow-x);
 	--y: calc((var(--tooltip-angle) + var(--tooltip-offset)) * -1);
 	translate: var(--x) var(--y);
@@ -88,7 +90,7 @@
 	top: 0;
 }
 
-@mixin storepress-tooltip-arrow-position-bottom() {
+@mixin arrow-position-bottom() {
 	--x: var(--_arrow-x);
 	--y: calc(var(--tooltip-angle) + var(--tooltip-offset));
 	translate: var(--x) var(--y);
@@ -100,7 +102,7 @@
 	top: auto;
 }
 
-@mixin storepress-tooltip-init($content-attribute: "data-storepress-tooltip") {
+@mixin init($content-attribute: "data-storepress-tooltip") {
 
 	[dir="rtl"] & {
 		--_arrow-x: 50%;
@@ -112,18 +114,18 @@
 
 		position: relative;
 
-		@include storepress-tooltip-variables();
+		@include variables();
 
 		&::before,
 		&::after {
-			@include storepress-tooltip-base-style();
+			@include base-style();
 		}
 
 		&:hover::before,
 		&:hover::after,
 		&:focus-visible::before,
 		&:focus-visible::after {
-			@include storepress-tooltip-hover-style();
+			@include hover-style();
 		}
 
 		// stylelint-disable-next-line scss/at-rule-no-unknown
@@ -132,34 +134,34 @@
 			&:hover::after,
 			&:focus-visible::before,
 			&:focus-visible::after {
-				@include storepress-tooltip-starting-style();
+				@include starting-style();
 			}
 		}
 
 		&::before {
-			@include storepress-tooltip-content-style($content-attribute);
-			@include storepress-tooltip-content-position-top();
+			@include content-style($content-attribute);
+			@include content-position-top();
 		}
 
 		&::after {
-			@include storepress-tooltip-arrow-style();
-			@include storepress-tooltip-arrow-position-top();
+			@include arrow-style();
+			@include arrow-position-top();
 		}
 	}
 
 	&.storepress-tooltip-position-top::before {
-		@include storepress-tooltip-content-position-top();
+		@include content-position-top();
 	}
 
 	&.storepress-tooltip-position-top::after {
-		@include storepress-tooltip-arrow-position-top();
+		@include arrow-position-top();
 	}
 
 	&.storepress-tooltip-position-bottom::before {
-		@include storepress-tooltip-content-position-bottom();
+		@include content-position-bottom();
 	}
 
 	&.storepress-tooltip-position-bottom::after {
-		@include storepress-tooltip-arrow-position-bottom();
+		@include arrow-position-bottom();
 	}
 }
