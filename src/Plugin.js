@@ -1,20 +1,59 @@
 function Plugin (element) {
+
+	const getPseudoElementSize = (element, pseudoElement) => {
+		// Create a temporary element to measure the pseudo-element
+		const temp = document.createElement('div')
+		const computedStyle = window.getComputedStyle(element, pseudoElement)
+		const contentAttr = computedStyle.getPropertyValue('content')
+		const match = contentAttr.match(/attr\(([^)]+)\)/)
+		const attributeName = match ? match[1] : false
+
+		// Copy text contents.
+		temp.textContent = attributeName ? element.getAttribute(attributeName) : ''
+
+		// Copy relevant styles.
+		temp.style.position = 'absolute'
+		temp.style.display = 'block'
+		temp.style.visibility = 'hidden'
+		temp.style.height = computedStyle.height
+		temp.style.width = computedStyle.width
+		temp.style.padding = computedStyle.padding
+		temp.style.margin = computedStyle.margin
+		temp.style.border = computedStyle.border
+		temp.style.boxSizing = computedStyle.boxSizing
+		temp.style.fontSize = computedStyle.fontSize
+		temp.style.lineHeight = computedStyle.lineHeight
+		temp.style.maxWidth = computedStyle.maxWidth
+		temp.style.miHeight = computedStyle.miHeight
+
+		document.body.appendChild(temp)
+		const data = {
+			height: temp.offsetHeight,
+			width: temp.offsetWidth,
+		}
+
+		document.body.removeChild(temp)
+
+		return data
+	}
+
 	const calculatePosition = () => {
 		removeStyles()
 		removeClasses()
 
 		const rect = this.$element.getBoundingClientRect()
 		const style = window.getComputedStyle(this.$element)
-		const tooltipBody = window.getComputedStyle(this.$element, 'before')
+		const tooltipBody = window.getComputedStyle(this.$element, '::before')
 
-		const tooltipWidth = parseInt(
+		let tooltipWidth = parseInt(
 			tooltipBody.getPropertyValue('width'),
 			10,
 		)
-		const tooltipHeight = parseInt(
+		let tooltipHeight = parseInt(
 			tooltipBody.getPropertyValue('height'),
 			10,
 		)
+
 		const tooltipAngle = parseInt(
 			style.getPropertyValue('--tooltip-angle'),
 			10,
@@ -31,6 +70,14 @@ function Plugin (element) {
 			style.getPropertyValue('--tooltip-padding'),
 			10,
 		)
+
+		if (isNaN(tooltipHeight)) {
+			const { height, width } = getPseudoElementSize(this.$element, '::before')
+
+			tooltipHeight = height - tooltipPadding
+			tooltipWidth = width - tooltipPadding
+		}
+
 		const calculatedPosition =
 			tooltipHeight +
 			tooltipAngle +

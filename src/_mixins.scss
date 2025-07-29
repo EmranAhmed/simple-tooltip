@@ -2,6 +2,7 @@
 // :where([data-storepress-tooltip]){ @include plugin.init("data-storepress-tooltip"); }
 
 @mixin variables() {
+	// Public
 	--tooltip-angle: 5px;
 	--tooltip-font-size: 0.8rem;
 	--tooltip-text-color: #fff;
@@ -11,6 +12,7 @@
 	--tooltip-padding: 10px;
 	--tooltip-offset: 5px;
 	--tooltip-edge: 2px;
+	// Private
 	--_tooltip-position: 0px;
 }
 
@@ -34,11 +36,13 @@
 
 @mixin hover-style() {
 	display: block;
+	visibility: visible;
 	opacity: 1;
 }
 
 @mixin starting-style() {
 	display: block;
+	visibility: hidden;
 	opacity: 0;
 }
 
