@@ -1,4 +1,5 @@
 function Plugin( element ) {
+	// For FireFox.
 	const getPseudoElementSize = ( $element, pseudoElement ) => {
 		// Create a temporary element to measure the pseudo-element
 		const temp = document.createElement( 'div' );
