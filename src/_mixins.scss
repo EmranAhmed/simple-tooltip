@@ -22,6 +22,7 @@
 	display: none;
 	opacity: 0;
 	z-index: 999;
+	outline: none;
 	transition-property: opacity, display;
 	transition-duration: 500ms;
 	// stylelint-disable-next-line property-no-unknown
@@ -106,6 +107,17 @@
 	top: auto;
 }
 
+@mixin show-state {
+	&.ios-safari-hover,
+	&:not(.ios-safari-hover):hover,
+	&:focus-visible {
+		&::before,
+		&::after {
+			@content;
+		}
+	}
+}
+
 @mixin init($content-attribute: "data-storepress-tooltip") {
 
 	[dir="rtl"] & {
@@ -125,19 +137,13 @@
 			@include base-style();
 		}
 
-		&:hover::before,
-		&:hover::after,
-		&:focus-visible::before,
-		&:focus-visible::after {
+		@include show-state {
 			@include hover-style();
 		}
 
 		// stylelint-disable-next-line scss/at-rule-no-unknown
 		@starting-style {
-			&:hover::before,
-			&:hover::after,
-			&:focus-visible::before,
-			&:focus-visible::after {
+			@include show-state {
 				@include starting-style();
 			}
 		}

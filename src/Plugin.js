@@ -122,13 +122,38 @@ function Plugin (element) {
 		}
 	}
 
+	const isiOSSafari = () => {
+		const ua = window.navigator.userAgent
+		const iOS = new RegExp('iPad|iPhone|iPod', 'i').test(ua)
+		const isWebKit = new RegExp('WebKit', 'i').test(ua)
+		const isChrome = new RegExp('CriOS', 'i').test(ua)
+
+		return iOS && isWebKit && !isChrome
+	}
+
 	/**
 	 * Sets up the initial state and attaches event listeners.
 	 * This is the final step in the setup process.
 	 */
 	const initial = () => {
-		this.$element.addEventListener('focusin', calculatePosition, { signal: this.signal, passive: true })
+		// To fix iOS Safari "sticky hover" issues.
+		if (isiOSSafari()) {
+			this.$element.addEventListener('touchstart', () => {
+				this.$element.classList.add('ios-safari-hover')
+			}, { signal: this.signal, passive: true })
+
+			document.addEventListener('touchstart', (event) => {
+				if (!this.$element.contains(event.target)) {
+					this.$element.classList.remove('ios-safari-hover')
+				}
+			}, { signal: this.signal, passive: true })
+		}
+
 		this.$element.addEventListener('pointerenter', calculatePosition, { signal: this.signal, passive: true })
+
+		if (this.$element.hasAttribute('tabindex')) {
+			this.$element.addEventListener('focusin', calculatePosition, { signal: this.signal, passive: true })
+		}
 	}
 
 	const removeStyles = () => {
@@ -139,6 +164,7 @@ function Plugin (element) {
 		this.$element.classList.remove(
 			'storepress-tooltip-position-top',
 			'storepress-tooltip-position-bottom',
+			'ios-safari-hover',
 		)
 	}
 
