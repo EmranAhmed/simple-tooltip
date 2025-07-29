@@ -20,7 +20,9 @@
 	},
 	"files": [
 		"build/**",
-		"src/**"
+		"README.md",
+		"index.html",
+		"style.css"
 	],
 	"main": "build/index.js",
 	"module": "src/index.js",
