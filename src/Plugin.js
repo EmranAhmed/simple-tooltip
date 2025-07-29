@@ -96,7 +96,7 @@ function Plugin (element) {
 		)
 
 		const width = tooltipWidth / 2
-		const position = rect.left + rect.width / 2
+		const position = rect.left + (rect.width / 2)
 
 		// left
 		const left = width - position
@@ -104,20 +104,22 @@ function Plugin (element) {
 
 		// right
 		const computedRight = width + position
-		const isRight = document.body.clientWidth < computedRight
-		const right = document.body.clientWidth - computedRight
+		const isRight = document.documentElement.clientWidth < computedRight
+		const right = document.documentElement.clientWidth - computedRight
 
 		if (isLeft) {
+			const tooltipPosition = this.isRTL ? (left + tooltipEdge) * -1 : left + tooltipEdge
 			this.$element.style.setProperty(
 				'--_tooltip-position',
-				`${left + tooltipEdge}px`,
+				`${tooltipPosition}px`,
 			)
 		}
 
 		if (isRight) {
+			const tooltipPosition = this.isRTL ? (right - tooltipEdge) * -1 : right - tooltipEdge
 			this.$element.style.setProperty(
 				'--_tooltip-position',
-				`${right - tooltipEdge}px`,
+				`${tooltipPosition}px`,
 			)
 		}
 	}
@@ -199,6 +201,7 @@ function Plugin (element) {
 	 */
 	const init = () => {
 		this.$element = element
+		this.isRTL = !!this.$element.closest('[dir="rtl"]')?.dir
 		this.controller = new AbortController()
 		this.signal = this.controller.signal
 

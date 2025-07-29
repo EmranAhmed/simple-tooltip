@@ -121,9 +121,10 @@
 @mixin init($content-attribute: "data-storepress-tooltip") {
 
 	[dir="rtl"] & {
-		--_arrow-x: 50%;
-		--_content-x: calc(50% + var(--_tooltip-position));
+		// --_arrow-x: -50%;
+		--_content-x: calc(-50% - var(--_tooltip-position));
 	}
+
 	& {
 		--_arrow-x: -50%;
 		--_content-x: calc(-50% + var(--_tooltip-position));
