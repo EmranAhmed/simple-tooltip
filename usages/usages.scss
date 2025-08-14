@@ -1,0 +1,10 @@
+@charset "UTF-8";
+
+@use "../src/style.scss";
+
+// Changing colors
+// See: "~@storepress/tooltip/src/mixins" variables() mixins.
+[data-tooltip] {
+	--tooltip-text-color: #ffffff;
+	--tooltip-background-color: #e31616;
+}

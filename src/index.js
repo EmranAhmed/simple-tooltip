@@ -5,6 +5,8 @@ import {
 	createPluginInstance,
 	triggerEvent,
 	getPluginInstance,
+	getWeakMap,
+	toUpperCamelCase,
 } from '@storepress/utils';
 
 /**
@@ -12,100 +14,190 @@ import {
  */
 import { Plugin } from './Plugin';
 
-function StorePressTooltip() {
-	const Tooltip = {
-		getInstance( element, options ) {
-			return createPluginInstance( element, options, Plugin );
-		},
+function createPlugin(
+	$defaultSelectors,
+	defaultOptions,
+	pluginObject,
+	namespace
+) {
+	const mapName = toUpperCamelCase( namespace );
+	const initEventType = `storepress_${ namespace }_init`.toLowerCase();
+	const destroyEventType = `storepress_${ namespace }_destroy`.toLowerCase();
+	const reloadEventType = `storepress_${ namespace }_reload`.toLowerCase();
 
-		getPluginInstance( element ) {
-			return getPluginInstance( element );
-		},
+	return {
+		get controller() {
+			const map = getWeakMap( mapName );
 
-		initWith( $selector, options ) {
-			const instance = this.getInstance( $selector, options );
-
-			for ( const { element, reset } of instance ) {
-				element.addEventListener( 'destroy', reset );
+			// Create new AbortController for document
+			let controller = map.get( document );
+			if ( controller instanceof AbortController ) {
+				controller.abort(); // Remove existing events
 			}
 
-			return instance;
+			controller = new AbortController();
+			map.set( document, controller );
+			return controller;
 		},
 
-		destroyWith( $selector ) {
-			const instance = this.getPluginInstance( $selector );
-			for ( const { destroy } of instance ) {
-				destroy();
-			}
+		get signal() {
+			return this.controller.signal;
 		},
 
-		reInitWith( $selector, options ) {
-			this.destroyWith( $selector );
-			this.initWith( $selector, options );
+		get instance() {
+			return {
+				set( element, options ) {
+					return createPluginInstance(
+						element,
+						options,
+						pluginObject
+					);
+				},
+
+				get( element ) {
+					return getPluginInstance( element );
+				},
+
+				init( $selector, options ) {
+					const instance = this.set( $selector, options );
+
+					if ( ! instance || instance.length === 0 ) {
+						return;
+					}
+
+					for ( const { element, reset } of instance ) {
+						if ( element && typeof reset === 'function' ) {
+							element.removeEventListener( 'destroy', reset, {
+								passive: true,
+								once: true,
+							} );
+							element.addEventListener( 'destroy', reset, {
+								passive: true,
+								once: true,
+							} );
+						}
+					}
+				},
+
+				destroy( $selector ) {
+					const instance = this.get( $selector );
+					if ( ! instance || instance.length === 0 ) {
+						return;
+					}
+					for ( const { destroy } of instance ) {
+						if ( typeof destroy === 'function' ) {
+							destroy();
+						}
+					}
+				},
+
+				reload( $selector, options ) {
+					this.destroy( $selector );
+					this.init( $selector, options );
+				},
+			};
+		},
+
+		setup() {
+			const handleInit = ( event ) => {
+				const defaultSettings = {};
+				const settings = {
+					...defaultSettings,
+					...event.detail?.settings,
+				};
+				const element = event.detail?.element;
+
+				if ( Array.isArray( element ) ) {
+					for ( const el of element ) {
+						this.instance.init( el, settings );
+					}
+				} else {
+					this.instance.init( element, settings );
+				}
+			};
+
+			const handleDestroy = ( event ) => {
+				const element = event.detail?.element;
+
+				if ( Array.isArray( element ) ) {
+					for ( const el of element ) {
+						this.instance.destroy( el );
+					}
+				} else {
+					this.instance.destroy( element );
+				}
+			};
+
+			const handleReload = ( event ) => {
+				const defaultSettings = {};
+				const settings = {
+					...defaultSettings,
+					...event.detail?.settings,
+				};
+				const element = event.detail?.element;
+
+				if ( Array.isArray( element ) ) {
+					for ( const el of element ) {
+						this.instance.reload( el, settings );
+					}
+				} else {
+					this.instance.reload( element, settings );
+				}
+			};
+
+			const options = {
+				passive: true,
+				signal: this.signal,
+			};
+
+			// Init.
+			document.addEventListener( initEventType, handleInit, options );
+
+			// Destroy.
+			document.addEventListener(
+				destroyEventType,
+				handleDestroy,
+				options
+			);
+
+			// Reload.
+			document.addEventListener( reloadEventType, handleReload, options );
+		},
+
+		clear( $selector = $defaultSelectors ) {
+			this.destroy( $selector );
+			this.controller.abort( 'clear' );
+		},
+
+		init( $selector = $defaultSelectors, settings ) {
+			triggerEvent( document, initEventType, {
+				element: $selector,
+				settings,
+			} );
+		},
+
+		destroy( $selector = $defaultSelectors ) {
+			triggerEvent( document, destroyEventType, {
+				element: $selector,
+			} );
+		},
+
+		reload( $selector = $defaultSelectors, settings ) {
+			triggerEvent( document, reloadEventType, {
+				element: $selector,
+				settings,
+			} );
 		},
 	};
-
-	// Init.
-	document.addEventListener(
-		'storepress_tooltip_init',
-		( event ) => {
-			const defaultSettings = {};
-			const settings = { ...defaultSettings, ...event.detail?.settings };
-			const element = event.detail?.element;
-
-			if ( Array.isArray( element ) ) {
-				for ( const el of element ) {
-					Tooltip.initWith( el, settings );
-				}
-			} else {
-				Tooltip.initWith( element, settings );
-			}
-		},
-		{ passive: true }
-	);
-
-	// Destroy.
-	document.addEventListener(
-		'storepress_tooltip_destroy',
-		( event ) => {
-			const element = event.detail?.element;
-
-			if ( Array.isArray( element ) ) {
-				for ( const el of element ) {
-					Tooltip.destroyWith( el );
-				}
-			} else {
-				Tooltip.destroyWith( element );
-			}
-		},
-		{ passive: true }
-	);
-
-	// Reload.
-	document.addEventListener(
-		'storepress_tooltip_reload',
-		( event ) => {
-			const defaultSettings = {};
-			const settings = { ...defaultSettings, ...event.detail?.settings };
-			const element = event.detail?.element;
-
-			if ( Array.isArray( element ) ) {
-				for ( const el of element ) {
-					Tooltip.reInitWith( el, settings );
-				}
-			} else {
-				Tooltip.reInitWith( element, settings );
-			}
-		},
-		{ passive: true }
-	);
 }
 
-document.addEventListener( 'DOMContentLoaded', () => {
-	StorePressTooltip();
-	triggerEvent( document, 'storepress_tooltip_init', {
-		element: [ '[data-storepress-tooltip]' ],
-	} );
-} );
+const StorePressTooltip = createPlugin(
+	'[data-storepress-tooltip]',
+	{},
+	Plugin,
+	'Tooltip'
+);
+
+StorePressTooltip.setup();
 
 export default StorePressTooltip;

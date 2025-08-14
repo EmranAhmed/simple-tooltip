@@ -6,6 +6,7 @@ const {
 	requestToExternal,
 	requestToHandle,
 	requestToExternalModule,
+	getRootFile,
 	getFile,
 	getWebPackAlias,
 } = require('./tools/webpack-helpers')
@@ -17,11 +18,16 @@ const scriptConfig = {
 	...defaultJSConfig,
 	entry: {
 		// index: getFile('index.js'),
+		'usages': [
+			getRootFile('usages/usages.scss'),
+			getRootFile('usages/usages.js'),
+		],
 		[`tooltip`]: [
 			getFile('style.scss'),
 			getFile('index.js'),
 		],
 		[`storepress-utils`]: {
+			// import: getRootFile('usages/utils.js'),
 			import: '@storepress/utils/build-module/index.js',
 			library: {
 				name: ['StorePress', 'Utils'],

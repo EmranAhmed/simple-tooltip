@@ -92,39 +92,27 @@ Create `custom-tooltip.js` file
  * External dependencies
  */
 import StorePressTooltip from '@storepress/tooltip'
-import { triggerEvent } from '@storepress/utils'
 
 document.addEventListener('DOMContentLoaded', () => {
-  StorePressTooltip()
-  triggerEvent(document, 'storepress_tooltip_init', {
-    element: ['[data-tooltip]'],
-  })
+  StorePressTooltip.init()
 })
 
-// OR with native CustomEvent
-
-document.addEventListener('DOMContentLoaded', () => {
-  StorePressTooltip()
-  document.dispatchEvent(new CustomEvent('storepress_tooltip_init', {
-    detail: {
-      element: ['[data-tooltip]'],
-    },
-  }))
-})
 ```
 
 ## Reload and Destroy
 
 ```js
-import { triggerEvent } from '@storepress/utils'
-// Reload
-triggerEvent(document, 'storepress_tooltip_reload', {
-  element: ['[data-tooltip]'],
+/**
+ * External dependencies
+ */
+import StorePressTooltip from '@storepress/tooltip'
+
+document.addEventListener('DOMContentLoaded', () => {
+  StorePressTooltip.reload()
 })
 
-// Destroy
-triggerEvent(document, 'storepress_tooltip_destroy', {
-  element: ['[data-tooltip]'],
+document.addEventListener('DOMContentLoaded', () => {
+  StorePressTooltip.destroy()
 })
 ```
 
