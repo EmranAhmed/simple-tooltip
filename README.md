@@ -85,7 +85,7 @@ Create `custom-tooltip.scss` file
 }
 ```
 
-Create `custom-tooltip.js` file
+Create `scripts.js` file
 
 ```js
 /**
