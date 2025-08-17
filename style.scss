@@ -1,0 +1,14 @@
+@charset "UTF-8";
+
+@use "./src/mixins" as tooltip;
+
+// Changing colors
+// See: "~@storepress/tooltip/src/mixins" variables() mixins.
+:where([data-storepress-tooltip]) {
+	& {
+		--tooltip-text-color: #ffffff;
+		--tooltip-background-color: #e31616;
+	}
+
+	@include tooltip.init("data-storepress-tooltip");
+}

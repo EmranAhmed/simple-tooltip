@@ -17,15 +17,11 @@ const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts')
 const scriptConfig = {
 	...defaultJSConfig,
 	entry: {
-		// index: getFile('index.js'),
-		'usages': [
-			getRootFile('usages/usages.scss'),
-			getRootFile('usages/usages.js'),
+		tooltip: [
+			getRootFile('script.js'),
+			getRootFile('style.scss'),
 		],
-		[`tooltip`]: [
-			getFile('style.scss'),
-			getFile('index.js'),
-		],
+
 		[`storepress-utils`]: {
 			// import: getRootFile('usages/utils.js'),
 			import: '@storepress/utils/build-module/index.js',
