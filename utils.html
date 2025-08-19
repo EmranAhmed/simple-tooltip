@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Utils Check</title>
+
+	<script src="./build/test-utils.js"></script>
+
+	<style>
+		.item {
+			width: 50px;
+			height: 50px;
+			background-color: #ffccff;
+			margin: 10px;
+		}
+	</style>
+</head>
+
+<body>
+
+
+<div class="item x " id="single-x">X</div>
+<div class="item y" id="single-y">Y</div>
+
+<div class="item x">XX</div>
+<div class="item y">YY</div>
+
+<button id="trigger">Trigger</button>
+<button id="remove">Remove</button>
+<button id="remove-all">RemoveAll</button>
+
+<script type="text/javascript">
+
+	// storepress:tooltip:click
+	// storepress:tooltip:mouseenter
+
+	const tooltip = StorePress.Utils.createEventManager('tooltip')
+	const modal = StorePress.Utils.createEventManager('modal')
+	const button = StorePress.Utils.createEventManager('button')
+
+	let x
+	let y
+
+	tooltip.add('.x', 'click', (e) => { console.log(e.currentTarget, 'tooltip x native click') })
+	tooltip.add('.x', 'x:click', (e) => { console.log(e.currentTarget, 'tooltip x click') })
+	tooltip.add('.x', 'x:init', (e) => { console.log(e.currentTarget,'tooltip x init') })
+	tooltip.add('.x', 'x:reload', (e) => { console.log(e.currentTarget,'tooltip x reload') })
+
+	tooltip.add('.y', 'y:init', (e) => { console.log(e.currentTarget,'tooltip y init') })
+	tooltip.add('.y', 'y:click', (e) => { console.log(e.currentTarget,'tooltip y click') })
+	tooltip.add('.y', 'click', (e) => { console.log(e.currentTarget,'tooltip y native click') })
+	tooltip.add('.y', 'y:destroy', (e) => { console.log(e.currentTarget,'tooltip y destroy') })
+
+
+	button.add('#trigger', 'click', () => {
+
+
+		// tooltip.trigger('#single-x','x')
+		tooltip.trigger('.item', 'y:click')
+
+		// tooltip.remove('#single-x')
+		// tooltip.removeAll()
+		// console.log( tooltip.get('#single-x') )
+		// console.log( tooltip.getAll() )
+
+	})
+
+	button.add('#remove', 'click', () => {
+
+
+		// tooltip.trigger('#single-x','x')
+		tooltip.remove('.item', 'y')
+
+		// tooltip.remove('#single-x')
+		// tooltip.removeAll()
+		// console.log( tooltip.get('#single-x') )
+		// console.log( tooltip.getAll() )
+
+	})
+
+	button.add('#remove-all', 'click', () => {
+
+
+		// tooltip.trigger('#single-x','x')
+		tooltip.removeAll()
+
+		// tooltip.remove('#single-x')
+		// tooltip.removeAll()
+		// console.log( tooltip.get('#single-x') )
+		// console.log( tooltip.getAll() )
+
+	})
+
+
+	/*	tooltip.removeAll()
+		modal.removeAll()
+		button.removeAll()*/
+
+	/*document.querySelectorAll('.item').forEach(($item) => {
+		tooltip.remove($item)
+
+		y = $item
+	})*/
+
+
+
+	/*tooltip.add('.item', 'click', () => {console.log('tooltip click')})
+	tooltip.add('.item', 'mousemove', () => {console.log('tooltip mouseenter')})
+	tooltip.add('.item', 'init', () => {console.log('tooltip init')})*/
+
+
+</script>
+</body>
+</html>

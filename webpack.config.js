@@ -17,6 +17,15 @@ const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts')
 const scriptConfig = {
 	...defaultJSConfig,
 	entry: {
+
+/*		[`test-utils`]: {
+			import: getRootFile('utils.js'),
+			library: {
+				name: ['StorePress', 'Utils'],
+				type: 'window',
+			},
+		},*/
+
 		tooltip: [
 			getRootFile('script.js'),
 			getRootFile('style.scss'),
