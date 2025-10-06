@@ -1,39 +1,76 @@
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 	/*direction: rtl;*/
 }
 
 .content {
-    width: 80%;
-    height: 195vh;
+	width: 80%;
+	height: 195vh;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
-    margin-inline: auto;
+	margin-inline: auto;
 }
 
 ul {
-    display: grid;
-    list-style: none;
-    height: 100vh;
-    width: 80vw;
-    grid-auto-flow: column;
-    place-items: center;
-    margin-inline: auto;
+	display: grid;
+	list-style: none;
+	height: 100vh;
+	width: 80vw;
+	grid-auto-flow: column;
+	place-items: center;
+	margin-inline: auto;
 }
 
 .item {
 
-    --item-width: 30px;
-    width: var(--item-width);
-    aspect-ratio: 1;
-    position: relative;
-    margin-inline: 10px;
-    border-radius: 50%;
+	--item-width: 30px;
+	width: var(--item-width);
+	aspect-ratio: 1;
+	position: relative;
+	margin-inline: 10px;
+	border-radius: 50%;
 }
 
 .item:focus-visible {
-    border: 1px solid black;
+	border: 1px solid black;
+}
+
+
+#image-tooltip {
+	width: 30px;
+	aspect-ratio: 1;
+	background-color: gray;
+	position: relative;
+	margin-top: 400px;
+	margin-left: 400px;
+}
+
+#image-tooltip::before {
+	position: absolute;
+	content: attr(title);
+	width: 150px;
+	aspect-ratio: 1;
+	background-color: #333333;
+	background-image: url(images/sample.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position-x: center;
+	background-position-y: -30px;
+	top: 100%; /* REMOVE */
+	border: solid 5px #333333;
+	box-sizing: border-box;
+	border-radius: 5px;
+	color: #FFF;
+	text-align: center;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+
+
+	line-height: 15px; /*  background-position-y / 2  */
+	padding-block-start: 120px; /*  width: 150px - background-position-y: -20px */
+
 }
