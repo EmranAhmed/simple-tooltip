@@ -48,29 +48,72 @@ ul {
 	margin-left: 400px;
 }
 
+#image-tooltip:hover::before{
+	background-image: var(--bg);
+}
+
 #image-tooltip::before {
 	position: absolute;
 	content: attr(title);
 	width: 150px;
 	aspect-ratio: 1;
 	background-color: #333333;
-	background-image: url(images/sample.jpg);
+
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-position-x: center;
 	background-position-y: -30px;
 	top: 100%; /* REMOVE */
-	border: solid 5px #333333;
+	border: solid 4px #333333;
 	box-sizing: border-box;
 	border-radius: 5px;
+	/*display: flex;*/ /* SHOULD ENABLE FOR SAFARI */
+	/* justify-content: center; */
+
+
+	/*align-content: end;
+	align-items: end;*/
+
 	color: #FFF;
+	/*padding-block: 0 2px;*/
 	text-align: center;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	overflow: hidden;
 
 
-	line-height: 15px; /*  background-position-y / 2  */
-	padding-block-start: 120px; /*  width: 150px - background-position-y: -20px */
+	_line-height: 15px; /*  background-position-y / 2  */
+	_padding-block-start: 120px; /*  width: 150px - background-position-y: -20px */
 
 }
+
+/* Support From OSX Safari-17  */
+@supports (font-size-adjust: from-font) {
+	#image-tooltip::before {
+		line-height: 30px; /*  background-position-y  */
+		align-content: end;
+	}
+}
+
+@supports not (font-size-adjust: from-font) {
+	#image-tooltip::before {
+		line-height: 15px; /*  background-position-y / 2  */
+		padding-block-start: 120px; /*  width: 150px - background-position-y: -20px */
+	}
+}
+
+/*
+@supports not (align-content: end) {
+	#image-tooltip::before {
+		line-height: 15px; !*  background-position-y / 2  *!
+		padding-block-start: 120px; !*  width: 150px - background-position-y: -20px *!
+	}
+}
+
+@supports (align-content: end) {
+	#image-tooltip::before {
+		align-content: end;
+		align-items: end;
+	}
+}
+*/

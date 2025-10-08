@@ -1,19 +1,28 @@
 // @use "./mixins" as plugin;
 // :where([data-storepress-tooltip]){ @include plugin.init("data-storepress-tooltip"); }
 
+@property --tooltip-image {
+	syntax: "<url> | none";
+	inherits: true;
+	initial-value: none;
+}
+
 @mixin variables() {
 	// Public
 	--tooltip-angle: 5px;
-	--tooltip-font-size: 0.8rem;
+	--tooltip-font-size: 15px;
 	--tooltip-text-color: #fff;
 	--tooltip-background-color: #333;
+	--tooltip-image: none;
 	--tooltip-max-width: 150px;
-	--tooltip-min-height: 35px;
+	--tooltip-min-height: 30px;
 	--tooltip-padding: 10px;
 	--tooltip-offset: 5px;
 	--tooltip-edge: 2px;
 	// Private
 	--_tooltip-position: 0px;
+
+	position: relative;
 }
 
 @mixin base-style() {
@@ -27,6 +36,7 @@
 	transition-duration: 500ms;
 	// stylelint-disable-next-line property-no-unknown
 	transition-behavior: allow-discrete;
+
 	@media (prefers-reduced-motion: reduce) {
 		transition-property: none;
 		transition-duration: 0s;
@@ -47,18 +57,52 @@
 	opacity: 0;
 }
 
-@mixin content-style($content-attribute) {
+
+@mixin tooltip-style($content-attribute) {
 	content: attr(#{$content-attribute});
-	width: max-content;
 	max-width: var(--tooltip-max-width);
 	min-height: var(--tooltip-min-height);
 	background-color: var(--tooltip-background-color);
 	color: var(--tooltip-text-color);
-	border-radius: 3px;
-	padding: var(--tooltip-padding);
+	border-radius: 5px;
 	font-size: var(--tooltip-font-size);
 	text-align: center;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.2);
+}
+
+
+@mixin content-tooltip-style() {
+	width: max-content;
+	padding: var(--tooltip-padding);
+}
+
+@mixin image-tooltip-style() {
+	/*width: var(--tooltip-max-width);*/
+	aspect-ratio: 1;
+	border: solid 4px var(--tooltip-background-color);
+
+	background-image: var(--tooltip-image);
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position-x: center;
+	background-position-y: calc(var(--tooltip-min-height) * -1);
+
+	white-space: nowrap;
+	text-overflow: ellipsis; /* Not support on display:flex */
+	overflow: hidden;
+
+	// Safari 17.4 with latest browser.
+	// See: https://developer.apple.com/documentation/safari-release-notes/safari-17_4-release-notes
+	// See: https://caniuse.com/mdn-css_properties_align-content_block_context
+	@supports (text-wrap-mode: nowrap) {
+		line-height: var(--tooltip-min-height);
+		align-content: end; // From Safari 17.4 Added support for align-content on display:block containers.
+	}
+
+	@supports not (text-wrap-mode: nowrap) {
+		line-height: calc(var(--tooltip-min-height) / 2);
+		padding-block-start: calc(var(--tooltip-max-width) - var(--tooltip-min-height));
+	}
 }
 
 @mixin arrow-style() {
@@ -66,45 +110,58 @@
 	content: "";
 }
 
-@mixin content-position-top() {
-	--x: var(--_content-x);
-	--y: calc((100% + var(--tooltip-angle) + var(--tooltip-offset)) * -1);
-	translate: var(--x) var(--y);
+@mixin tooltip-position-top() {
+	& {
+		--x: var(--_content-x);
+		--y: calc((100% + var(--tooltip-angle) + var(--tooltip-offset)) * -1);
+		translate: var(--x) var(--y);
 
-	left: 50%;
-	top: 0;
+		left: 50%;
+		top: 0;
+	}
 }
 
-@mixin content-position-bottom() {
-	--x: var(--_content-x);
-	--y: calc(100% + var(--tooltip-angle) + var(--tooltip-offset));
-	translate: var(--x) var(--y);
+@mixin tooltip-position-bottom() {
 
-	left: 50%;
-	bottom: 0;
-	top: auto;
+	& {
+		--x: var(--_content-x);
+		--y: calc(100% + var(--tooltip-angle) + var(--tooltip-offset));
+		translate: var(--x) var(--y);
+
+		left: 50%;
+		bottom: 0;
+		top: auto;
+	}
+
 }
 
 @mixin arrow-position-top() {
-	--x: var(--_arrow-x);
-	--y: calc((var(--tooltip-angle) + var(--tooltip-offset)) * -1);
-	translate: var(--x) var(--y);
 
-	border-top-color: var(--tooltip-background-color);
-	left: 50%;
-	top: 0;
+	& {
+		--x: var(--_arrow-x);
+		--y: calc((var(--tooltip-angle) + var(--tooltip-offset)) * -1);
+		translate: var(--x) var(--y);
+
+		border-top-color: var(--tooltip-background-color);
+		left: 50%;
+		top: 0;
+	}
 }
 
 @mixin arrow-position-bottom() {
-	--x: var(--_arrow-x);
-	--y: calc(var(--tooltip-angle) + var(--tooltip-offset));
-	translate: var(--x) var(--y);
 
-	border-top-color: transparent;
-	border-bottom-color: var(--tooltip-background-color);
-	left: 50%;
-	bottom: 0;
-	top: auto;
+	& {
+		--x: var(--_arrow-x);
+		--y: calc(var(--tooltip-angle) + var(--tooltip-offset));
+		translate: var(--x) var(--y);
+
+		border-top-color: transparent;
+		border-bottom-color: var(--tooltip-background-color);
+		left: 50%;
+		bottom: 0;
+		top: auto;
+	}
+
 }
 
 @mixin show-state {
@@ -121,21 +178,29 @@
 @mixin init($content-attribute: "data-storepress-tooltip") {
 
 	[dir="rtl"] & {
-		// --_arrow-x: -50%;
 		--_content-x: calc(-50% - var(--_tooltip-position));
 	}
 
 	& {
-		--_arrow-x: -50%;
-		--_content-x: calc(-50% + var(--_tooltip-position));
-
-		position: relative;
 
 		@include variables();
+
+		--_arrow-x: -50%;
+		--_content-x: calc(-50% + var(--_tooltip-position));
 
 		&::before,
 		&::after {
 			@include base-style();
+		}
+
+		&::before {
+			@include tooltip-style($content-attribute);
+			@include tooltip-position-top();
+		}
+
+		&::after {
+			@include arrow-style();
+			@include arrow-position-top();
 		}
 
 		@include show-state {
@@ -149,30 +214,60 @@
 			}
 		}
 
+		/**
+		Support for `@container style()` supported browser.
+		Support From Chrome: 111+, Edge: 111+, Safari: 18+, FireFox: N/A, Opera: 97
+		 */
+
+		@container style(--tooltip-image: none) {
+			&::before {
+				@include content-tooltip-style();
+			}
+		}
+
+		@container not style(--tooltip-image: none) {
+			&::before {
+				@include image-tooltip-style();
+			}
+		}
+
+		/**
+		Fallback for non `@container style()` supported browser.
+		We cannot use `@supports not (@container style(--tooltip-background-image: none))` like this.
+		So We use `text-box: normal` css property which have similar support like `@container style()`
+		In both safari and firefox.
+		See: https://caniuse.com/mdn-css_at-rules_container_style_queries_for_custom_properties
+		See: https://caniuse.com/mdn-css_properties_text-box
+		 */
+
+		@supports not (text-box: normal) {
+			&.storepress-tooltip-type-image::before {
+				@include image-tooltip-style();
+			}
+
+			&:not(.storepress-tooltip-type-image)::before {
+				@include content-tooltip-style();
+			}
+		}
+	}
+
+	&.storepress-tooltip-position-top {
 		&::before {
-			@include content-style($content-attribute);
-			@include content-position-top();
+			@include tooltip-position-top();
 		}
 
 		&::after {
-			@include arrow-style();
 			@include arrow-position-top();
 		}
 	}
 
-	&.storepress-tooltip-position-top::before {
-		@include content-position-top();
-	}
+	&.storepress-tooltip-position-bottom {
+		&::before {
+			@include tooltip-position-bottom();
+		}
 
-	&.storepress-tooltip-position-top::after {
-		@include arrow-position-top();
-	}
-
-	&.storepress-tooltip-position-bottom::before {
-		@include content-position-bottom();
-	}
-
-	&.storepress-tooltip-position-bottom::after {
-		@include arrow-position-bottom();
+		&::after {
+			@include arrow-position-bottom();
+		}
 	}
 }

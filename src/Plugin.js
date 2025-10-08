@@ -221,6 +221,10 @@ function Plugin( element ) {
 				passive: true,
 			} );
 		}
+
+		if ( this.isImageTooltip ) {
+			this.$element.classList.add( 'storepress-tooltip-type-image' );
+		}
 	};
 
 	/**
@@ -234,6 +238,9 @@ function Plugin( element ) {
 		this.isRTL = !! this.$element.closest( '[dir="rtl"]' )?.dir;
 		this.controller = new AbortController();
 		this.signal = this.controller.signal;
+		this.isImageTooltip =
+			this.$element.style.getPropertyValue( '--tooltip-image' ).length >
+			0;
 
 		initial();
 
