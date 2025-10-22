@@ -1,6 +1,6 @@
 {
 	"name": "@storepress/tooltip",
-	"version": "0.6.0",
+	"version": "0.7.0",
 	"description": "StorePress ToolTip Plugin",
 	"author": "EmranAhmed",
 	"license": "GPL-2.0-or-later",
@@ -31,7 +31,7 @@
 		"src/**"
 	],
 	"dependencies": {
-		"@storepress/utils": "^0.11.0"
+		"@storepress/utils": "^0.12.2"
 	},
 	"devDependencies": {
 		"@woocommerce/dependency-extraction-webpack-plugin": "^3.0.1",
@@ -75,6 +75,7 @@
 		"prepackage": "rm -rf ./${npm_package_name}.zip && npm run build",
 		"package": "./tools/package.js",
 		"test:e2e": "wp-scripts test-e2e",
-		"test:unit": "wp-scripts test-unit-js"
+		"test:unit": "wp-scripts test-unit-js",
+		"prepare": "husky"
 	}
 }

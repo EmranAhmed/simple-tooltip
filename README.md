@@ -36,6 +36,8 @@ You can set the tooltip's text using another data attribute, like `data-tooltip-
 <button type="button" data-storepress-tooltip="This is a tooltip!">Hover over me</button>
 
 <a href="#" data-storepress-tooltip="Another tooltip here.">Or me!</a>
+
+<div class="storepress-tooltip-type-image" style="--tooltip-image: url('images/sample.jpg')" data-storepress-tooltip="Monotone ctallysyndicatemarketpositioning.">Text</div>
 ```
 
 ## Local Usages
@@ -46,6 +48,7 @@ You can set the tooltip's text using another data attribute, like `data-tooltip-
 - Load `./build/storepress-utils.js`
 - Load `./build/tooltip.js`
 - Add `data-storepress-tooltip="Tooltip Text"` attribute on any HTML element.
+- Add `data-storepress-tooltip="Image Tooltip Text" and class="storepress-tooltip-type-image" and style="--tooltip-image: url('images/sample.jpg')"` attribute on any HTML element for image tooltip.
 
 ## Development
 
@@ -72,14 +75,14 @@ Create `custom-tooltip.scss` file
 
 @use "~@storepress/tooltip/src/mixins" as plugin;
 
-:where([data-tooltip]) {
+:where([data-storepress-tooltip]) {
   // $content-attribute is for tooltip text attribute.
-  @include plugin.init("data-tooltip");
+  @include plugin.init("data-storepress-tooltip");
 }
 
 // Changing colors
 // See: "~@storepress/tooltip/src/mixins" variables() mixins.
-[data-tooltip] {
+[data-storepress-tooltip] {
   --tooltip-text-color: #ffffff;
   --tooltip-background-color: #e31616;
 }
@@ -115,4 +118,3 @@ document.addEventListener('DOMContentLoaded', () => {
   StorePressTooltip.destroy()
 })
 ```
-
