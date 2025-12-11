@@ -1,7 +1,7 @@
 # Simple Tooltip By StorePress
 
 It's a lightweight, dependency-free JavaScript solution for creating dynamic, configurable tooltips on web pages. 
-The library is initialized declaratively via data attributes and can be controlled programmatically through a simple JavaScript API and custom events.
+The library is initialized declaratively via "data-*" attributes and can be controlled programmatically through a simple JavaScript API and custom events.
 
 
 ## Features
@@ -13,8 +13,6 @@ The library is initialized declaratively via data attributes and can be controll
 - CSS-Driven: The plugin calculates positioning but relies on your CSS for the actual appearance, giving you full control over styling.
 
 - JavaScript API: Provides a simple API to initialize, destroy, re-initialize, and get instances of tooltips.
-
-- Event-Based: Uses a custom event system (`storepress_tooltip_init`,`storepress_tooltip_reload`, `storepress_tooltip_destroy`) for global control.
 
 - Support `prefers-reduced-motion` for accessibility.
 
@@ -62,10 +60,11 @@ You can set the tooltip's text using another data attribute, like `data-tooltip-
 npm i @storepress/tooltip @storepress/utils --save
 ```
 
-Let's create tooltip from HTML Attribute `data-tooltip`.
+Let's create tooltip from HTML Attribute `data-storepress-tooltip`.
 
 ```html
-<span class="tooltip" data-tooltip="Tooltip Contents"></span>
+<span data-storepress-tooltip="Tooltip Contents">For Text Tooltip</span>
+<span class="storepress-tooltip-type-image" style="--tooltip-image: url('images/sample.jpg')" data-storepress-tooltip="Tooltip Contents"> For Image tooltip </span>
 ```
 
 Create `custom-tooltip.scss` file
@@ -118,3 +117,34 @@ document.addEventListener('DOMContentLoaded', () => {
   StorePressTooltip.destroy()
 })
 ```
+
+## Control from external script
+
+```js
+/**
+ * External dependencies
+ */
+import { getStorePressPlugin } from '@storepress/utils'
+
+// getStorePressPlugin is also available globally by: StorePress.Utils.getStorePressPlugin
+
+document.getElementById('custom-button').addEventListener('click', () => {
+  const Tooltip = getStorePressPlugin('tooltip')
+  Tooltip.destroy()
+  Tooltip.init()
+  
+  Tooltip.setup()
+  Tooltip.clear()
+})
+
+
+const $tooltips1 = StorePress.Utils.getPluginInstance('li.item', 'tooltip')
+const $tooltips2 = StorePress.Utils.getStorePressPlugin('tooltip').get('li.item')
+const $tooltips3 = StorePress.Utils.getStorePressPlugin('tooltip').get()
+```
+
+## Publish
+
+- Add Tag - `git tag $(node -p "require('./package.json').version") && git push origin "$_"`
+- Delete Tag - `git tag -d $(node -p "require('./package.json').version") && git push origin --delete "$_"`
+- Publish - `npm publish`
