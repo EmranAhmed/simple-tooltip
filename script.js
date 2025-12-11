@@ -1,8 +1,8 @@
 /**
  * External dependencies
  */
-import StorePressTooltip from '@storepress/tooltip'
+import StorePressTooltip from '@storepress/tooltip';
 
-document.addEventListener('DOMContentLoaded', () => {
-	StorePressTooltip.init()
-})
+document.addEventListener( 'DOMContentLoaded', () => {
+	StorePressTooltip.init();
+} );

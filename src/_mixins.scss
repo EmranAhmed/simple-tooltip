@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 // @use "./mixins" as plugin;
 // :where([data-storepress-tooltip]){ @include plugin.init("data-storepress-tooltip"); }
 
@@ -23,6 +25,7 @@
 	--_tooltip-position: 0px;
 
 	position: relative;
+	isolation: isolate;
 }
 
 @mixin base-style() {
@@ -57,7 +60,6 @@
 	opacity: 0;
 }
 
-
 @mixin tooltip-style($content-attribute) {
 	content: attr(#{$content-attribute});
 	max-width: var(--tooltip-max-width);
@@ -70,14 +72,15 @@
 	box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.2);
 }
 
-
 @mixin content-tooltip-style() {
 	width: max-content;
 	padding: var(--tooltip-padding);
 }
 
 @mixin image-tooltip-style() {
-	/*width: var(--tooltip-max-width);*/
+
+	// If tooltip text is not long it will fit for image.
+	min-width: var(--tooltip-max-width);
 	aspect-ratio: 1;
 	border: solid 4px var(--tooltip-background-color);
 

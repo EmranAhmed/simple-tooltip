@@ -94,9 +94,6 @@ function getWebPackAlias () {
 	return {
 		// '@utils': getFile('utils/Plugin'), // Add @utils on .eslintrc.js -> 'import/core-modules'
 		'@storepress/tooltip': getFile('index.js'),
-		//'@storepress/icons': getFile('packages/icons'),
-		//'@storepress/utils': getFile('packages/utils'),
-		//'@storepress/components': getFile('packages/components'),
 	}
 }
 
